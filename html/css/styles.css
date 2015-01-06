@@ -1,0 +1,25 @@
+h1, h2, h3, h1 small {
+  font-weight: 900 
+}
+
+header {
+  background-image: url(../img/header.jpg);
+  font-size: 6em;
+  text-shadow: 3px 3px #555
+}
+
+.blue {
+  color: blue
+}
+
+.cyan {
+  color: cyan
+}
+
+.magenta {
+  color: magenta
+}
+
+.yellow {
+  color: yellow
+}
