@@ -8,12 +8,15 @@
   "Fetch and parse JSON data from the given URL"
   [url]
   (let [channel (chan)
-        get-response-text #(.getResponseText (.-target %))
+        response-text #(.getResponseText (.-target %))
         parse #(keywordize-keys (transit/read (transit/reader :json) %))]
-    (xhr/send url #(put! channel (parse (get-response-text %))))
+    (xhr/send url #(put! channel (parse (response-text %))))
     channel))
 
-(defn day [date])
+(defn format-date [date & [fmt]]
+  (. (js/moment date) format (or fmt "LLLL")))
 
-(defn display-date [date & [pattern]]
-  (. (js/moment date) format (or pattern "HH:mm")))
+(defn get-weekday [date]
+  (let [weekdays ["sunnu" "mánu" "þriðju" "miðviku"
+                  "fimmtu" "föstu" "laugar"]]
+    (nth weekdays (. (js/moment date) weekday))))

@@ -3,9 +3,9 @@
   (:require [clojure.string :refer [blank? lower-case]]
             [cljs.core.async :refer [<!]]
             [rum :include-macros true]
-            [tv.utils :refer [day display-date get-json!]]))
+            [tv.utils :refer [get-json! format-date get-weekday]]))
 
-(def state (atom {}))
+(def state (atom {:schedule []}))
 
 (defn get-schedule! []
   (go
@@ -14,12 +14,13 @@
       (if (seq results)
         (swap! state assoc :schedule results)))))
 
-(rum/defc rum/static header []
-  [:header.jumbotron
-   [:h1#title.animated.rubberBand
-    [:span.magenta"mjög sjónvarp!  "
-     [:span.cyan "svo dagsskrá!  "
-      [:span.yellow "vá!"]]]]])
+(rum/defc rum/static header [weekday]
+  [:header.jumbotron.text-center
+   [:h1.animated.rubberBand
+    [:span.fuchsia "sjónvarps"
+     [:span.yellow "DOGEskrá "
+      [:span.aqua weekday
+       [:span.lime " (vá!)"]]]]]])
 
 (rum/defc rum/static tv-show
   [{:keys [description originalTitle startTime title]}]
@@ -28,21 +29,20 @@
     (if-not (or (blank? originalTitle)
                 (= (lower-case originalTitle)
                    (lower-case title)))
-      [:small.magenta (str " (" originalTitle ")")])
-    [:p [:small.blue (display-date startTime "HH:mm")]]]
+      [:small.fuchsia (str " (" originalTitle ")")])
+    [:p [:small.blue (format-date startTime "HH:mm")]]]
    [:p description]])
 
-(rum/defc rum/reactive tv-schedule []
+(rum/defc rum/static tv-schedule [schedule]
+  [:section#tv-schedule.container.animated.fadeIn.text-center
+   (map tv-show schedule)])
+
+(rum/defc rum/reactive app []
   (get-schedule!)
   (let [{:keys [schedule]} (rum/react state)]
     (if (seq schedule)
-      [:section#tv-shows.container.animated.fadeIn
-       (map tv-show schedule)])))
+      [:div
+       (header (get-weekday (:startTime (first schedule))))
+       (tv-schedule schedule)])))
 
-(rum/defc app []
-  [:div.text-center
-   (header)
-   (tv-schedule)])
-
-(defn ^:export render [element]
-  (rum/mount (app) element))
+(rum/mount (app) (.-body js/document))
