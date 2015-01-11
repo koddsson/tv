@@ -1,4 +1,4 @@
-(ns tv
+(ns tv.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [clojure.string :refer [blank? lower-case]]
             [cljs.core.async :refer [<!]]
@@ -27,8 +27,7 @@
   [:div.tv-show
    [:h2 title
     (if-not (or (blank? originalTitle)
-                (= (lower-case originalTitle)
-                   (lower-case title)))
+                (= (lower-case originalTitle) (lower-case title)))
       [:small.fuchsia (str " (" originalTitle ")")])
     [:p [:small.blue (format-date startTime "HH:mm")]]]
    [:p description]])
@@ -38,11 +37,12 @@
    (map tv-show schedule)])
 
 (rum/defc rum/reactive app []
-  (get-schedule!)
   (let [{:keys [schedule]} (rum/react state)]
     (if (seq schedule)
       [:div
        (header (get-weekday (:startTime (first schedule))))
        (tv-schedule schedule)])))
+
+(get-schedule!)
 
 (rum/mount (app) (.-body js/document))

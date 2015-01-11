@@ -7,7 +7,7 @@
                   [pandeiro/boot-http "0.4.2" :scope "test"]
                   [cljsjs/boot-cljsjs "0.4.0" :scope "test"]
                   [org.clojure/core.async "0.1.346.0-17112a-alpha" :scope "test"]
-                  [rum "0.1.0" :scope "test"]
+                  [rum "0.1.1" :scope "test"]
                   [com.cognitect/transit-cljs "0.8.199" :scope "test"]])
 
 (require

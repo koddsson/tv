@@ -1,0 +1,3 @@
+Only display shows AFTER the current time, grey out ones before
+Display shows on some kind of timeline
+Add an AJAX loader until page is able to render

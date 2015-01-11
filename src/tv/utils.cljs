@@ -13,8 +13,8 @@
     (xhr/send url #(put! channel (parse (response-text %))))
     channel))
 
-(defn format-date [date & [fmt]]
-  (. (js/moment date) format (or fmt "LLLL")))
+(defn format-date [date & [format]]
+  (. (js/moment date) format (or format "LLLL")))
 
 (defn get-weekday [date]
   (let [weekdays ["sunnu" "mánu" "þriðju" "miðviku"
