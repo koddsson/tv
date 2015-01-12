@@ -8,7 +8,7 @@ A simple ClojureScript application
 
 ### Prerequisites
 
-To hack on this app yourself, you will need to have a recent [JVM][jvm] installed and the [Clojure][clojure] build tool [boot][boot]. Figuring out how to install these is up to you! 
+To hack on this app yourself, you will need to have a recent [JVM][jvm] installed and the [Clojure][clojure] build tool [boot][boot]. Figuring out how to install these on whatever platform you're using is entirely up to you! 
 
 [boot]: http://boot-clj.com/
 [clojure]: http://clojure.org/
@@ -28,4 +28,4 @@ To package the app for release, do the following:
 $ boot release
 ```
 
-Now open the file `target/index.html` in your favorite web browser to check that everything worked.
+Now open the file `target/index.html` in your favorite web browser to check that everything worked. Note that `boot release` must be run **every time** you make changes to the code, whereas `boot debug` will automatically watch and recompile your code.
