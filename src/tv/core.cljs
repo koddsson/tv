@@ -40,7 +40,7 @@
       [:div.text-center
        (header (get-weekday (:startTime (first schedule))))
        (tv-schedule schedule)]
-      [:img#loader {:src "img/loader.gif"}])))
+      [:img#loader {:src "img/loader.gif" :width 160 :height 24}])))
 
 (defn ^:export mount [element]
   (get-schedule!)
