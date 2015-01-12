@@ -8,6 +8,11 @@ header {
   text-shadow: 2px 2px #555
 }
 
+#loader {
+  display: block;
+  margin: 50px auto
+}
+
 .aqua {
   color: cyan
 }

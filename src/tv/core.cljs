@@ -1,7 +1,7 @@
 (ns tv.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [clojure.string :refer [blank? lower-case]]
-            [cljs.core.async :refer [<!]]
+            [cljs.core.async :refer [<! timeout]]
             [rum :refer-macros [defc]]
             [tv.utils :refer [get-json! format-date get-weekday]]))
 
@@ -9,6 +9,7 @@
 
 (defn get-schedule! []
   (go
+    (<! (timeout 2000))
     (let [url "http://apis.is/tv/ruv"
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
@@ -38,7 +39,8 @@
     (if (seq schedule)
       [:div.text-center
        (header (get-weekday (:startTime (first schedule))))
-       (tv-schedule schedule)])))
+       (tv-schedule schedule)]
+      [:img#loader {:src "img/loader.gif"}])))
 
 (defn ^:export mount [element]
   (get-schedule!)
