@@ -3,7 +3,6 @@ h1, h2, h3, h1 small {
 }
 
 header {
-  /* background-image: url(../img/header.jpg); */
   font-size: 6em;
   text-shadow: 2px 2px #555
 }
@@ -11,24 +10,4 @@ header {
 #loader {
   display: block;
   margin: 50px auto
-}
-
-.aqua {
-  color: cyan
-}
-
-.blue {
-  color: blue
-}
-
-.fuchsia {
-  color: fuchsia
-}
-
-.lime {
-  color: lime
-}
-
-.yellow {
-  color: yellow
 }

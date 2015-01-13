@@ -9,7 +9,7 @@
 
 (defn get-schedule! []
   (go
-    (<! (timeout 1000))
+    (<! (timeout 2000))
     (let [url "http://apis.is/tv/ruv"
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
@@ -18,8 +18,8 @@
 (defc header < rum/static [weekday]
   [:header.jumbotron
    [:h1.animated.rubberBand
-    [:span.fuchsia "sjónvarpsdagsskrá "
-     [:span.lime weekday]]]])
+    [:span {:style {:color "hotpink"}} "sjónvarpsdagsskrá "
+     [:span {:style {:color "lime" :font-style "italic"}} weekday]]]])
 
 (defc tv-schedule < rum/static [schedule]
   [:section#tv-schedule.container.animated.fadeIn
@@ -28,8 +28,10 @@
       [:h2 title
        (if-not (or (blank? originalTitle)
                    (= (lower-case originalTitle) (lower-case title)))
-         [:small.fuchsia (str " (" originalTitle ")")])
-       [:p [:small.blue (format-date startTime "HH:mm")]]]
+         [:small {:style {:color "teal"}}
+          (str " (" originalTitle ")")])
+       [:p [:small {:style {:color "darkslateblue"}}
+            (format-date startTime "HH:mm")]]]
       [:p description]])])
 
 (defc app < rum/reactive []
@@ -38,7 +40,7 @@
       [:div.text-center
        (header (get-weekday (:startTime (first schedule))))
        (tv-schedule schedule)]
-      [:img#loader {:src "img/loader.gif" :width 160 :height 24}])))
+      [:img#loader {:src "img/hourglass.svg"}])))
 
 (defn ^:export mount [element]
   (get-schedule!)

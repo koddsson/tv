@@ -4,13 +4,16 @@
             [cljs.core.async :refer [chan put!]]
             [cognitect.transit :as transit]))
 
+(defn- parse-json [json]
+  (let [reader (transit/reader :json)]
+    (keywordize-keys (transit/read reader json))))
+
 (defn get-json!
   "Fetch and parse JSON data from the given URL"
   [url]
   (let [channel (chan)
-        response-text #(.getResponseText (.-target %))
-        parse #(keywordize-keys (transit/read (transit/reader :json) %))]
-    (xhr/send url #(put! channel (parse (response-text %))))
+        response-text #(.getResponseText (.-target %))]
+    (xhr/send url #(put! channel (parse-json (response-text %))))
     channel))
 
 (defn format-date [date & [format]]
