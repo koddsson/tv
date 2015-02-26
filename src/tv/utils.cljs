@@ -4,6 +4,9 @@
             [cljs.core.async :refer [chan put!]]
             [cognitect.transit :as transit]))
 
+(defn get-date-classes [date]
+  (if (> (js/moment date) (js/moment)) "" "hide"))
+
 (defn- parse-json [json]
   (let [reader (transit/reader :json)]
     (keywordize-keys (transit/read reader json))))
