@@ -1,4 +1,4 @@
-# Dogeskrá
+# What's on TV in Iceland today?
 
 A simple ClojureScript application which shows a daily schedule for what's on Iceland's public TV channel RÚV today.
 
