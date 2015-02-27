@@ -1,27 +1,29 @@
 (ns tv.core
-  (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [clojure.string :refer [blank? lower-case]]
-            [cljs.core.async :refer [<!]]
-            [rum :refer-macros [defc]]
-            [tv.utils :refer [get-json! format-date get-weekday has-begun?]]))
+  (:require-macros
+    [cljs.core.async.macros :refer [go]])
+  (:require
+    [clojure.string :refer [blank? lower-case]]
+    [cljs.core.async :refer [<!]]
+    [rum]
+    [tv.utils :refer [get-json! format-date get-weekday has-begun?]]))
 
 (def state (atom {}))
 
-(defn get-schedule! []
+(defn get-schedule! [& [station]]
   (go
-    (let [url "http://apis.is/tv/ruv"
+    (let [url (str "http://apis.is/tv/" (or station "ruv"))
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
         (let [schedule (remove #(has-begun? (:startTime %)) results)]
           (swap! state assoc :schedule schedule))))))
 
-(defc header < rum/static [weekday]
+(rum/defc header < rum/static [weekday]
   [:header.jumbotron
    [:h1.animated.rubberBand
     [:span {:style {:color "hotpink"}} "sjónvarpsdagsskrá "
      [:span {:style {:color "lime" :font-style "italic"}} weekday]]]])
 
-(defc tv-schedule < rum/static [schedule]
+(rum/defc tv-schedule < rum/static [schedule]
   [:section#tv-schedule.container.animated.fadeIn
    (for [{:keys [description originalTitle startTime title]} schedule]
      [:div.tv-show
@@ -34,7 +36,7 @@
             (format-date startTime "HH:mm")]]]
       [:p description]])])
 
-(defc app < rum/reactive []
+(rum/defc main < rum/reactive []
   (let [{:keys [schedule]} (rum/react state)]
     (if (seq schedule)
       [:div.text-center
@@ -44,4 +46,4 @@
 
 (defn ^:export mount [element]
   (get-schedule!)
-  (rum/mount (app) element))
+  (rum/mount (main) element))
