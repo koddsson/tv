@@ -5,7 +5,6 @@
                   [adzerk/boot-cljs-repl "0.1.9" :scope "test"]
                   [adzerk/boot-reload "0.2.4" :scope "test"]
                   [pandeiro/boot-http "0.6.2" :scope "test"]
-                  [cljsjs/boot-cljsjs "0.4.6" :scope "test"]
                   [org.clojure/core.async "0.1.346.0-17112a-alpha" :scope "test"]
                   [rum "0.2.5" :scope "test"]
                   [sablono "0.3.4" :scope "test"]
