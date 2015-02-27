@@ -3,7 +3,7 @@
   (:require [clojure.string :refer [blank? lower-case]]
             [cljs.core.async :refer [<! timeout]]
             [rum :refer-macros [defc]]
-            [tv.utils :refer [get-json! format-date get-weekday]]))
+            [tv.utils :refer [get-json! format-date get-weekday get-date-classes]]))
 
 (def state (atom {}))
 
@@ -24,7 +24,7 @@
 (defc tv-schedule < rum/static [schedule]
   [:section#tv-schedule.container.animated.fadeIn
    (for [{:keys [description originalTitle startTime title]} schedule]
-     [:div.tv-show
+     [:div.tv-show {:class (get-date-classes startTime)}
       [:h2 title
        (if-not (or (blank? originalTitle)
                    (= (lower-case originalTitle) (lower-case title)))
