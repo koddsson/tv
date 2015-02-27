@@ -4,9 +4,6 @@
             [cljs.core.async :refer [chan put!]]
             [cognitect.transit :as transit]))
 
-(defn get-date-classes [date]
-  (if (> (js/moment date) (js/moment)) "" "hide"))
-
 (defn- parse-json [json]
   (let [reader (transit/reader :json)]
     (keywordize-keys (transit/read reader json))))
@@ -18,6 +15,9 @@
         response-text #(.getResponseText (.-target %))]
     (xhr/send url #(put! channel (parse-json (response-text %))))
     channel))
+
+(defn has-begun? [date]
+  (< (js/moment date) (js/moment)))
 
 (defn format-date [date & [format]]
   (. (js/moment date) format (or format "LLLL")))

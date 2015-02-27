@@ -3,7 +3,7 @@
   (:require [clojure.string :refer [blank? lower-case]]
             [cljs.core.async :refer [<!]]
             [rum :refer-macros [defc]]
-            [tv.utils :refer [get-json! format-date get-weekday get-date-classes]]))
+            [tv.utils :refer [get-json! format-date get-weekday has-begun?]]))
 
 (def state (atom {}))
 
@@ -12,7 +12,8 @@
     (let [url "http://apis.is/tv/ruv"
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
-        (swap! state assoc :schedule results)))))
+        (let [schedule (remove #(has-begun? (:startTime %)) results)]
+          (swap! state assoc :schedule schedule))))))
 
 (defc header < rum/static [weekday]
   [:header.jumbotron
@@ -23,7 +24,7 @@
 (defc tv-schedule < rum/static [schedule]
   [:section#tv-schedule.container.animated.fadeIn
    (for [{:keys [description originalTitle startTime title]} schedule]
-     [:div.tv-show {:class (get-date-classes startTime)}
+     [:div.tv-show
       [:h2 title
        (if-not (or (blank? originalTitle)
                    (= (lower-case originalTitle) (lower-case title)))
