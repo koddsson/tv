@@ -6,6 +6,7 @@
                   [adzerk/boot-reload "0.2.4" :scope "test"]
                   [pandeiro/boot-http "0.6.2" :scope "test"]
                   [org.clojure/core.async "0.1.346.0-17112a-alpha" :scope "test"]
+                  [org.clojure/core.incubator "0.1.3" :scope "test"]
                   [rum "0.2.5" :scope "test"]
                   [sablono "0.3.4" :scope "test"]
                   [com.cognitect/transit-cljs "0.8.205" :scope "test"]])
@@ -23,11 +24,11 @@
         (watch)
         (speak)
         (cljs-repl)
-        (cljs :optimizations :none :source-map true :unified-mode true)
+        (cljs :optimizations :none :source-map true)
         (reload)))
 
 (deftask release
-  "Package for release"
+  "Package for release - currently broken, no idea why!"
   []
   (comp (speak)
         (cljs :optimizations :advanced)))

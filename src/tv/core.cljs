@@ -1,5 +1,6 @@
 (ns tv.core
   (:require-macros
+    [clojure.core.strint :refer [<<]]
     [cljs.core.async.macros :refer [go]])
   (:require
     [clojure.string :refer [blank? lower-case]]
@@ -7,42 +8,51 @@
     [rum]
     [tv.utils :refer [get-json! format-date get-weekday has-begun?]]))
 
-(def state (atom {}))
+(def state (atom {:ready? false :schedule [] :station nil}))
+
+(defonce stations
+  #{{:ruv    {:nom "RÚV"     :gen "RÚVs"}}
+    {:stod2  {:nom "Stöð 2"  :gen "Stöðvar 2"}}
+    {:stod3  {:nom "Stöð 3"  :gen "Stöðvar 3"}}
+    {:skjar1 {:nom "Skjár 1" :gen "Skjás 1"}}})
+
+(defn get-station [id]
+  (some #(and ((keyword id) %) %) stations))
 
 (defn get-schedule! [& [station]]
   (go
-    (let [url (str "http://apis.is/tv/" (or station "ruv"))
+    (let [station (or (keyword station) :ruv)
+          url (str "http://apis.is/tv/" (name station))
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
         (let [schedule (remove #(has-begun? (:startTime %)) results)]
-          (swap! state assoc :schedule schedule))))))
+          (swap! state assoc :ready? true
+                             :schedule schedule
+                             :station (get-station station)))))))
 
-(rum/defc header < rum/static [weekday]
-  [:header.jumbotron
-   [:h1.animated.rubberBand
-    [:span {:style {:color "hotpink"}} "sjónvarpsdagsskrá "
-     [:span {:style {:color "lime" :font-style "italic"}} weekday]]]])
+(rum/defc tv-show < rum/static
+  [{:keys [description originalTitle startTime title]}]
+  [:div.tv-show
+   [:h2 title
+    (if-not (or (blank? originalTitle)
+                (= (lower-case originalTitle) (lower-case title)))
+      [:small {:style {:color "teal"}}
+       (<< " (~{originalTitle})")])
+    [:p [:small {:style {:color "darkslateblue"}}
+         (format-date startTime "HH:mm")]]]
+   [:p description]])
 
-(rum/defc tv-schedule < rum/static [schedule]
-  [:section#tv-schedule.container.animated.fadeIn
-   (for [{:keys [description originalTitle startTime title]} schedule]
-     [:div.tv-show
-      [:h2 title
-       (if-not (or (blank? originalTitle)
-                   (= (lower-case originalTitle) (lower-case title)))
-         [:small {:style {:color "teal"}}
-          (str " (" originalTitle ")")])
-       [:p [:small {:style {:color "darkslateblue"}}
-            (format-date startTime "HH:mm")]]]
-      [:p description]])])
+(rum/defc tv-schedule < rum/static [schedule station]
+  [:section#tv-schedule.animated.fadeIn
+   [:h1 (:nom station)]
+   (map tv-show schedule)])
 
 (rum/defc main < rum/reactive []
-  (let [{:keys [schedule]} (rum/react state)]
-    (if (seq schedule)
-      [:div.text-center
-       (header (get-weekday (:startTime (first schedule))))
-       (tv-schedule schedule)]
-      [:img#loader {:src "img/hourglass.svg"}])))
+  (let [{:keys [ready? schedule station]} (rum/react state)]
+    (conj [:div#rum-components]
+          (if ready?
+            (tv-schedule schedule station)
+            [:img#loader {:src "img/hourglass.svg"}]))))
 
 (defn ^:export mount [element]
   (get-schedule!)

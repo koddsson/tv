@@ -2,12 +2,16 @@ h1, h2, h3, h1 small {
   font-weight: 800 
 }
 
-header {
+#loader {
+  display: block;
+  margin: 50px auto
+}
+
+.jumbotron {
   font-size: 6em;
   text-shadow: 2px 2px #555
 }
 
-#loader {
-  display: block;
-  margin: 50px auto
+.jumbotron h1 {
+  color: hotpink;
 }
