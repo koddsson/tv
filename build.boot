@@ -22,7 +22,6 @@
   []
   (comp (serve :dir "target" :port 8000)
         (watch)
-        (speak)
         (cljs-repl)
         (cljs :optimizations :none :source-map true)
         (reload)))
@@ -30,5 +29,4 @@
 (deftask release
   "Package for release - currently broken, no idea why!"
   []
-  (comp (speak)
-        (cljs :optimizations :advanced)))
+  (cljs :optimizations :advanced))
