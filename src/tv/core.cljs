@@ -6,7 +6,7 @@
     [clojure.string :refer [blank? lower-case]]
     [cljs.core.async :refer [<!]]
     [rum]
-    [tv.utils :refer [get-json! format-date has-finished?]]))
+    [tv.utils :refer [get-json! format-date get-end-time has-finished?]]))
 
 (def state (atom {:ready? false :schedule [] :station nil}))
 
@@ -31,7 +31,8 @@
                              :station  (get-station station)))))))
 
 (rum/defc tv-show < rum/static
-  [{:keys [description duration originalTitle startTime title]}]
+  [{:keys [description duration originalTitle startTime title] :as show}]
+  (let [end-time (get-end-time show)]
   [:div.tv-show
    [:h2 title
     (if-not (or (blank? originalTitle)
@@ -39,8 +40,9 @@
       [:small {:style {:color "teal"}}
        (<< " (~{originalTitle})")])
     [:p [:small {:style {:color "darkslateblue"}}
-         (format-date startTime "HH:mm")]]]
-   [:p description]])
+         (<< "~(format-date startTime \"HH:mm\") -> "
+             "~(format-date end-time \"HH:mm\")")]]]
+   [:p description]]))
 
 (rum/defc tv-schedule < rum/static [schedule station]
   [:section#tv-schedule.animated.fadeIn
