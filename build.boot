@@ -9,7 +9,8 @@
                   [org.clojure/core.incubator "0.1.3"                  :scope "test"]
                   [rum                        "0.2.5"                  :scope "test"]
                   [sablono                    "0.3.4"                  :scope "test"]
-                  [com.cognitect/transit-cljs "0.8.205"                :scope "test"]])
+                  [com.cognitect/transit-cljs "0.8.205"                :scope "test"]
+                  [cljsjs/moment              "2.9.0-0"                :scope "test"]])
 
 (require
   '[adzerk.boot-cljs      :refer [cljs]]

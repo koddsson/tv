@@ -1,5 +1,6 @@
 (ns tv.utils
-  (:require [goog.net.XhrIo :as xhr]
+  (:require [cljsjs.moment]
+            [goog.net.XhrIo :as xhr]
             [clojure.walk :refer [keywordize-keys]]
             [cljs.core.async :refer [chan put!]]
             [cognitect.transit :as transit]))
