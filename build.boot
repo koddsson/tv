@@ -28,6 +28,6 @@
         (reload)))
 
 (deftask release
-  "Package for release - currently broken, no idea why!"
+  "Package for release"
   []
   (cljs :optimizations :advanced))

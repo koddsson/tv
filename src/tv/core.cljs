@@ -33,16 +33,16 @@
 (rum/defc tv-show < rum/static
   [{:keys [description duration originalTitle startTime title] :as show}]
   (let [end-time (get-end-time show)]
-  [:div.tv-show
-   [:h2 title
-    (if-not (or (blank? originalTitle)
-                (= (lower-case originalTitle) (lower-case title)))
-      [:small {:style {:color "teal"}}
-       (<< " (~{originalTitle})")])
-    [:p [:small {:style {:color "darkslateblue"}}
-         (<< "~(format-date startTime \"HH:mm\") -> "
-             "~(format-date end-time \"HH:mm\")")]]]
-   [:p description]]))
+    [:div.tv-show
+     [:h2 title
+      (if-not (or (blank? originalTitle)
+                  (= (lower-case originalTitle) (lower-case title)))
+        [:small {:style {:color "teal"}}
+         (<< " (~{originalTitle})")])
+      [:p [:small {:style {:color "darkslateblue"}}
+           (<< "~(format-date startTime \"HH:mm\") til "
+               "~(format-date end-time \"HH:mm\")")]]]
+     [:p description]]))
 
 (rum/defc tv-schedule < rum/static [schedule station]
   [:section#tv-schedule.animated.fadeIn
