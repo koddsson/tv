@@ -26,5 +26,8 @@
                   "fimmtu" "föstu" "laugar"]]
     (nth weekdays (. (js/moment date) weekday))))
 
-(defn has-begun? [date]
-  (< (js/moment date) (js/moment)))
+(defn has-finished? [start-time duration]
+  (let [duration (. js/moment (duration duration))
+        end-time (. (js/moment start-time) (add duration))
+        now      (js/moment)]
+    (not (. (js/moment end-time) (isAfter now)))))

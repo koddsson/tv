@@ -6,7 +6,7 @@
     [clojure.string :refer [blank? lower-case]]
     [cljs.core.async :refer [<!]]
     [rum]
-    [tv.utils :refer [get-json! format-date get-weekday has-begun?]]))
+    [tv.utils :refer [get-json! format-date has-finished?]]))
 
 (def state (atom {:ready? false :schedule [] :station nil}))
 
@@ -17,7 +17,7 @@
     {:skjar1 {:nom "Skjár 1" :gen "Skjás 1"}}})
 
 (defn get-station [id]
-  (some #(and ((keyword id) %) %) stations))
+  (some #(and (get % id) %) stations))
 
 (defn get-schedule! [& [station]]
   (go
@@ -25,13 +25,15 @@
           url (str "http://apis.is/tv/" (name station))
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
-        (let [schedule (remove #(has-begun? (:startTime %)) results)]
-          (swap! state assoc :ready? true
+        (let [schedule (remove
+                         #(has-finished? (:startTime %) (:duration %))
+                         results)]
+          (swap! state assoc :ready?   true
                              :schedule schedule
-                             :station (get-station station)))))))
+                             :station  (get-station station)))))))
 
 (rum/defc tv-show < rum/static
-  [{:keys [description originalTitle startTime title]}]
+  [{:keys [description duration originalTitle startTime title]}]
   [:div.tv-show
    [:h2 title
     (if-not (or (blank? originalTitle)
@@ -44,7 +46,6 @@
 
 (rum/defc tv-schedule < rum/static [schedule station]
   [:section#tv-schedule.animated.fadeIn
-   [:h1 (:nom station)]
    (map tv-show schedule)])
 
 (rum/defc main < rum/reactive []

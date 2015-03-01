@@ -7,6 +7,10 @@ h1, h2, h3, h1 small {
   margin: 50px auto
 }
 
+#tv-schedule > :first-child {
+  font-size: 1.5em;
+}
+
 .jumbotron {
   font-size: 6em;
   text-shadow: 2px 2px #555
