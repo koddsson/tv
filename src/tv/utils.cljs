@@ -26,8 +26,9 @@
                   "fimmtu" "föstu" "laugar"]]
     (nth weekdays (. (js/moment date) weekday))))
 
-(defn has-finished? [start-time duration]
+(defn has-finished?
+  "Predicate to check whether or not a TV show has already finished"
+  [{:keys [duration startTime]}]
   (let [duration (. js/moment (duration duration))
-        end-time (. (js/moment start-time) (add duration))
-        now      (js/moment)]
-    (not (. (js/moment end-time) (isAfter now)))))
+        end-time (. (js/moment startTime) (add duration))]
+    (not (. (js/moment end-time) isAfter))))

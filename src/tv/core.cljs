@@ -25,9 +25,7 @@
           url (str "http://apis.is/tv/" (name station))
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
-        (let [schedule (remove
-                         #(has-finished? (:startTime %) (:duration %))
-                         results)]
+        (let [schedule (remove #(has-finished? %) results)]
           (swap! state assoc :ready?   true
                              :schedule schedule
                              :station  (get-station station)))))))
