@@ -48,7 +48,7 @@
 (rum/defc tv-schedule < rum/static [schedule]
   [:section#tv-schedule.animated.fadeIn
    (for [{:keys [startTime] :as show} schedule]
-     (let [unique-key (format-date startTime "x")]
+     (let [unique-key (str "tv-show-" (format-date startTime "x"))]
        (rum/with-props tv-show show :rum/key unique-key)))])
 
 (rum/defc main < rum/reactive []
