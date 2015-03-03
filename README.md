@@ -20,15 +20,15 @@ Once everything is installed, do the following to hack on the app in debug mode:
 $ lein cljsbuild auto debug
 ```
 
-Now open `index.html` in your favorite web browser.
-
 To package the app for release, do the following:
 
 ```
 $ lein cljsbuild once release
 ```
 
-Now open `index.html` in your favorite web browser to check that everything worked. Note that `release` must be run **every time** you make changes to the code, whereas `debug` will automatically watch and recompile your code.
+Now open `index.html` in your favorite web browser to check that everything worked.
+
+Note that `release` must be run **every time** you make changes to the code, whereas `debug` will automatically watch and recompile your code.
 
 ## Who?
 
