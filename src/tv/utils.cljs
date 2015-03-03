@@ -8,10 +8,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; HTTP
 
-(defn get-response-text [response]
+(defn- get-response-text [response]
   (.getResponseText (.-target response)))
 
-(defn parse-json [json]
+(defn- parse-json [json]
   (let [reader (transit/reader :json)]
     (keywordize-keys (transit/read reader json))))
 

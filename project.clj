@@ -1,6 +1,6 @@
 (defproject tv "0.2.0-SNAPSHOT"
   :author "Paul Burt"
-  :description "Mail your MP"
+  :description "What's on Icelandic TV today?"
   :min-lein-version "2.5.0"
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :profiles

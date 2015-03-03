@@ -6,8 +6,7 @@
     [clojure.string :refer [blank? lower-case]]
     [cljs.core.async :refer [<!]]
     [rum]
-    [tv.utils :refer [get-json!
-                      format-date get-end-time has-finished?]]))
+    [tv.utils :refer [get-json!  format-date get-end-time has-finished?]]))
 
 (def state (atom {:error nil :schedule [] :station nil}))
 
