@@ -6,7 +6,8 @@
     [clojure.string :refer [blank? lower-case]]
     [cljs.core.async :refer [<!]]
     [rum]
-    [tv.utils :refer [get-json! format-date get-end-time has-finished?]]))
+    [tv.utils :refer [get-json!
+                      format-date get-end-time has-finished?]]))
 
 (def state (atom {:ready? false :schedule [] :station nil}))
 
@@ -32,7 +33,7 @@
 
 (rum/defc tv-show < rum/static
   [{:keys [description duration originalTitle startTime title] :as show}]
-  (let [end-time (get-end-time show)]
+  (let [end-time   (get-end-time show)]
     [:div.tv-show
      [:h2 title
       (if-not (or (blank? originalTitle)
@@ -44,15 +45,17 @@
                "~(format-date end-time \"HH:mm\")")]]]
      [:p description]]))
 
-(rum/defc tv-schedule < rum/static [schedule station]
+(rum/defc tv-schedule < rum/static [schedule]
   [:section#tv-schedule.animated.fadeIn
-   (map tv-show schedule)])
+   (for [{:keys [startTime] :as show} schedule]
+     (let [unique-key (format-date startTime "x")]
+       (rum/with-props tv-show show :rum/key unique-key)))])
 
 (rum/defc main < rum/reactive []
-  (let [{:keys [ready? schedule station]} (rum/react state)]
+  (let [{:keys [ready? schedule]} (rum/react state)]
     (conj [:div#rum-components]
           (if ready?
-            (tv-schedule schedule station)
+            (tv-schedule schedule)
             [:img#loader {:src "img/hourglass.svg"}]))))
 
 (defn ^:export mount [element]

@@ -5,6 +5,9 @@
             [cljs.core.async :refer [chan put!]]
             [cognitect.transit :as transit]))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; HTTP
+
 (defn get-response-text [response]
   (.getResponseText (.-target response)))
 
@@ -18,6 +21,9 @@
   (let [channel (chan)]
     (xhr/send url #(put! channel (parse-json (get-response-text %))))
     channel))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Date and time-handling
 
 (defn format-date [date & [format]]
   (. (js/moment date) format (or format "LLLL")))
