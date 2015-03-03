@@ -4,6 +4,8 @@
 
 A simple ClojureScript application which shows a daily schedule for what's on Iceland's public TV channel RÚV today.
 
+This is very much a work-in-progress. Currently the app only shows the upcoming schedule for RÚV but the plan is to support all the TV stations supported by the [apis.is][apis.is] `/tv` API endpoint.
+
 ## How?
 
 ### Prerequisites
@@ -32,6 +34,7 @@ Now open the file `target/index.html` in your favorite web browser to check that
 
 This app was written by [Paul Burt][pb].
 
+[apis.is]: http://docs.apis.is/#endpoint-tv
 [boot]: http://boot-clj.com/
 [clojure]: http://clojure.org/
 [jvm]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
