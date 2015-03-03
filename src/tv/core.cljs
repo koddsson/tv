@@ -9,7 +9,7 @@
     [tv.utils :refer [get-json!
                       format-date get-end-time has-finished?]]))
 
-(def state (atom {:ready? false :schedule [] :station nil}))
+(def state (atom {:error nil :schedule [] :station nil}))
 
 (defonce stations
   #{{:ruv    {:nom "RÚV"     :gen "RÚVs"}}
@@ -18,7 +18,7 @@
     {:skjar1 {:nom "Skjár 1" :gen "Skjás 1"}}})
 
 (defn get-station [id]
-  (some #(and (get % id) %) stations))
+  (some #(and (get % (keyword id)) %) stations))
 
 (defn get-schedule! [& [station]]
   (go
@@ -27,13 +27,16 @@
           {:keys [results]} (<! (get-json! url))]
       (if (seq results)
         (let [schedule (remove #(has-finished? %) results)]
-          (swap! state assoc :ready?   true
-                             :schedule schedule
-                             :station  (get-station station)))))))
+          (swap! state assoc :schedule schedule :station station))
+        (swap! state assoc :error "Það kom upp smá vandamál...")))))
+
+(rum/defc error-message < rum/static [error]
+  [:section#errors
+   [:p.bg-danger error]])
 
 (rum/defc tv-show < rum/static
   [{:keys [description duration originalTitle startTime title] :as show}]
-  (let [end-time   (get-end-time show)]
+  (let [end-time (get-end-time show)]
     [:div.tv-show
      [:h2 title
       (if-not (or (blank? originalTitle)
@@ -45,18 +48,17 @@
                "~(format-date end-time \"HH:mm\")")]]]
      [:p description]]))
 
-(rum/defc tv-schedule < rum/static [schedule]
+(rum/defc tv-schedule < rum/static [station schedule]
   [:section#tv-schedule.animated.fadeIn
    (for [{:keys [startTime] :as show} schedule]
-     (let [unique-key (str "tv-show-" (format-date startTime "x"))]
-       (rum/with-props tv-show show :rum/key unique-key)))])
+     (let [rum-key (<< "~(name station)-~(format-date startTime \"x\")")]
+       (rum/with-props tv-show show :rum/key rum-key)))])
 
 (rum/defc main < rum/reactive []
-  (let [{:keys [ready? schedule]} (rum/react state)]
+  (let [{:keys [error schedule station]} (rum/react state)]
     (conj [:div#rum-components]
-          (if ready?
-            (tv-schedule schedule)
-            [:img#loader {:src "img/hourglass.svg"}]))))
+          (error-message error)
+          (tv-schedule station schedule))))
 
 (defn ^:export mount [element]
   (get-schedule!)
