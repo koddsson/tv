@@ -50,7 +50,8 @@
 (rum/defc tv-schedule < rum/static [station schedule]
   [:section#tv-schedule.animated.fadeIn
    (for [{:keys [startTime] :as show} schedule]
-     (let [rum-key (<< "~(name station)-~(format-date startTime \"x\")")]
+     (let [timestamp (format-date startTime "x")
+           rum-key (<< "~(name station)-~{timestamp}")]
        (rum/with-props tv-show show :rum/key rum-key)))])
 
 (rum/defc main < rum/reactive []
